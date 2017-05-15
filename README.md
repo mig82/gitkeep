@@ -4,7 +4,7 @@ Sometimes when working with Git you require the folder structure of your project
 
 However, [Git is not currently capable of versioning directories](https://git.wiki.kernel.org/index.php/GitFaq#Can_I_add_empty_directories.3F). It only versions files. So if your directories are empty, they won't be versioned.
 
-Gitkeep is an Ant build file that helps you create .gitkeep files inside of every subdir of the base dir, in order to be able to force them to be versioned when pushing a project to Git.
+Gitkeep is an Ant build file that helps you create a `.gitkeep` file inside of every sub-directory of the base directory, in order to be able to force them to be versioned when pushing a project to Git.
 
 The purpose of it is to simplify doing this:
 
