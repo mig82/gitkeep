@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Gitkeep" basedir="." default="keep">
+
+
+	<!--Define the Ant Contrib tasks from the jar in this dir-->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="./ant-contrib-0.6.jar"/>
+		</classpath>
+	</taskdef>
+
+
+	<!--Apply to all subdirs of this dir-->
+	<target name="keep" description="-> Add a .gitkeep file to all empty subdir's of this dir.">
+
+		<!--Create a list of all the subdirs in the tree of this dir-->
+		<dirset id="dirs.ref" dir="./" includes="**/*">
+			<!--To-do: Exclude patterns from .gitignore file-->
+			<exclude name="/jssrc"/>
+		</dirset>
+		<property name="dirs.list" refid="dirs.ref" />
+
+		<!--Check the contents of each subdir.-->
+		<for list="${dirs.list}" delimiter=";" param="dir">
+			<sequential>
+				<!--If the subdir is empty this target will add a .gitkeep file to it-->
+				<antcall target="gitkeep" inheritall="false">
+					<param name="dir" value="@{dir}"/>
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+
+	<!--Add a .gitkeep file to a directory if it's empty-->
+	<target name="gitkeep" description="-> Add a .gitkeep file to a specific subdir of this dir. Use -Ddir=relative/path/to/dir">
+
+		<!--Create a ref of the files inside this dir-->
+		<fileset dir="${dir}" id="contents.ref"/>
+
+		<!--Determine whether this directory is empty-->
+		<pathconvert refid="contents.ref" property="contents.path" setonempty="false"/>
+
+		<if>
+			<not><isset property="contents.path"/></not>
+			<then>
+				<echo message="    '${dir}' is empty!"/>
+				<echo message="Version this dir in Git even if its empty." file="./${dir}/.gitkeep" force="true" append="false"/>
+			</then>
+			<else>
+				<echo message="    '${dir}' contains: ${contents.path}"/>
+			</else>
+		</if>
+	</target>
+
+	<!--Remove all .gitkeep files under this dir's tree-->
+	<target name="letgo" description="-> Remove all .gitkeep files under this dir's tree.">
+		<!--Create a ref to all the .gitkeep files under this dir's tree-->
+		<fileset id="gitkeep.files.ref" dir="./" includes="**/.DS_Store"/>
+		<!--Create list of gitkeep files-->
+		<property name="gitkeep.list" refid="gitkeep.files.ref" />
+		<for list="${gitkeep.list}" delimiter=";" param="keep.file">
+			<sequential>
+				<!--If the subdir is empty this target will add a .gitkeep file to it-->
+				<delete file="@{keep.file}"/>
+			</sequential>
+		</for>
+	</target>
+
+</project>
