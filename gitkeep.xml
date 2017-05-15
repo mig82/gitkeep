@@ -11,6 +11,13 @@
 	<!--Apply to all subdirs of this dir-->
 	<target name="keep" description="-> Add a .gitkeep file to all empty subdir's of this dir.">
 
+		<loadfile property="file" srcfile=".gitignore"/>
+		<for param="line" list="${file}" delimiter="${line.separator}">
+			<sequential>
+				<echo>@{line}</echo>
+			</sequential>
+		</for>
+
 		<!--Create a ref to all the subdirs in the tree of this dir-->
 		<dirset id="dirs.ref" dir="./" includes="**/*">
 			<!--To-do: Exclude patterns extracted from .gitignore file-->
